@@ -1,11 +1,63 @@
-<div align="center">
+# Netflix Clone - Clean Architecture Boilerplate
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A high-fidelity Netflix clone built with React, Tailwind CSS, and Firebase.
 
-  <h1>Built with AI Studio</h2>
+## Architecture Overview
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+This project follows **Clean Architecture** principles to ensure scalability and maintainability:
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+- **UI Layer (`/src/components`, `/src/pages`)**: React components styled with Tailwind CSS and animated with Framer Motion.
+- **Business Logic Layer (`/src/context`, `/src/hooks`)**: Global state management via Context API and reusable logic via Custom Hooks.
+- **Data Layer (`/src/services`, `/src/lib`)**: API integration with TMDB and Firebase SDK configuration.
 
-</div>
+## Tech Stack
+
+- **Frontend**: React 18+ (Vite)
+- **Backend**: Firebase (Auth, Firestore)
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **API**: TMDB (The Movie Database)
+
+## Project Structure
+
+```text
+/src
+  /components     # Reusable UI components (Navbar, MovieRow, Banner, etc.)
+  /context        # Global state (Auth, UI)
+  /hooks          # Custom React hooks
+  /lib            # Third-party library configs (Firebase, Utils)
+  /pages          # Page-level components (Landing, Browse, Login)
+  /services       # API services (TMDB)
+  /types          # TypeScript interfaces
+```
+
+## Setup Instructions
+
+1. **Clone the repository** and install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. **Configure Environment Variables**:
+   Create a `.env.local` file and add your TMDB API Key:
+   ```env
+   VITE_TMDB_API_KEY=your_tmdb_api_key
+   ```
+
+3. **Firebase Setup**:
+   The project is pre-configured with Firebase. Ensure `firebase-applet-config.json` is present in the root.
+
+4. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+## Key Features
+
+- **Firebase Authentication**: Secure sign-up and login flow.
+- **Dynamic Hero Section**: Randomly selected trending movie on each refresh.
+- **Movie Categories**: Horizontally scrollable rows fetching real-time data from TMDB.
+- **Search Functionality**: Real-time search across movies and TV shows.
+- **Video Overlay**: Immersive video player experience on click.
+- **Responsive Design**: Fully adaptive for Mobile, Tablet, and Desktop.

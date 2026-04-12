@@ -1,0 +1,5 @@
+{
+  "name": "Netflix Clone",
+  "description": "A high-fidelity Netflix landing page clone built with React, Tailwind CSS, and Framer Motion.",
+  "requestFramePermissions": []
+}

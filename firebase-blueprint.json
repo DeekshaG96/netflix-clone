@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "myList": { 
+          "type": "array", 
+          "items": { "type": "integer" },
+          "description": "Array of TMDB movie IDs"
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "MovieDetail": {
+      "title": "Movie Detail",
+      "description": "Cached movie details for the user's list",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "title": { "type": "string" },
+        "poster_path": { "type": "string" },
+        "backdrop_path": { "type": "string" },
+        "overview": { "type": "string" },
+        "addedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Private user profile data"
+    },
+    "/users/{userId}/myList/{movieId}": {
+      "schema": "MovieDetail",
+      "description": "Movies saved to the user's list"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (matches request.auth.uid)
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required)
+    //   - displayName: string (optional)
+    //   - photoURL: string (optional)
+    //   - myList: array of integers (optional)
+    //   - createdAt: timestamp (required)
+    //
+    // Subcollection: myList
+    // Document ID: {movieId}
+    // Fields:
+    //   - id: integer (required)
+    //   - title: string (required)
+    //   - poster_path: string (optional)
+    //   - backdrop_path: string (optional)
+    //   - overview: string (optional)
+    //   - addedAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'createdAt']) &&
+             data.uid == request.auth.uid &&
+             data.email is string &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidMovie(data) {
+      return data.keys().hasAll(['id', 'title', 'addedAt']) &&
+             data.id is int &&
+             data.title is string &&
+             data.title.size() < 200 &&
+             data.addedAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) &&
+                    request.resource.data.uid == resource.data.uid &&
+                    request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false; // Users cannot delete their profiles via client
+
+      match /myList/{movieId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidMovie(request.resource.data);
+        allow update: if isOwner(userId) && isValidMovie(request.resource.data) &&
+                      request.resource.data.id == resource.data.id;
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}
